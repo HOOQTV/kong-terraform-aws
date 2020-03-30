@@ -17,6 +17,7 @@ data "template_file" "shell-script" {
     PORTAL_HOST         = local.portal_host
     SESSION_SECRET      = random_string.session_secret.result
     KONG_ADMIN_USERNAME = var.kong_admin_username
+    KONG_ADMIN_GROUP    = var.kong_admin_group
     KONG_ADMIN_KEY      = var.kong_admin_key
     KONG_ADMIN_PATH     = var.kong_admin_path
   }

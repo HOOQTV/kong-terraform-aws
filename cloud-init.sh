@@ -253,21 +253,41 @@ if [ $? != 0 ]; then
         -d "config.whitelist=${VPC_CIDR_BLOCK}" > /dev/null
 
     echo "Configuring Admin Access"
+    # Create consumer
     curl -s -X POST http://localhost:8001/consumers \
         -d "username=${KONG_ADMIN_USERNAME}" > /dev/null
 
+    # Assign API key to consumer
     curl -s -X POST "http://localhost:8001/consumers/${KONG_ADMIN_USERNAME}/key-auth" \
         -d "key=${KONG_ADMIN_KEY}" > /dev/null
 
-    curl -s -X POST -H "Content-Type: application/json" http://localhost:8001/services \
-        --data "{\"name\": \"kong-admin\",\"host\": \"localhost\",\"port\": 8001,\"path\": \"/\"}" > /dev/null
+    # Assign group to consumer
+    curl -s -X POST "http://localhost:8001/consumers/${KONG_ADMIN_USERNAME}/acls" \
+        -d "group=${KONG_ADMIN_GROUP}" > /dev/null
 
+    # Create kong admin service
+    curl -s -X POST http://localhost:8001/services \
+        --data "name=kong-admin" \
+        --data "host=localhost" \
+        --data "port=8001" \
+        --data "path=/" > /dev/null
+
+    # Set Key Auth plugin to the kong admin service
+    curl -s -X POST http://localhost:8001/services/kong-admin/plugins \
+        --data "name=key-auth" \
+        --data "config.key_names[]=apikey" \
+        --data "config.hide_credentials=true" > /dev/null
+
+    # Set ACL plugin to the kong admin service
+    curl -s -X POST http://localhost:8001/services/kong-admin/plugins \
+        --data "name=acl" \
+        --data "config.whitelist=${KONG_ADMIN_GROUP}" \
+        --data "config.hide_groups_header=true" > /dev/null
+
+    # Create kong admin route
     curl -s -X POST http://localhost:8001/services/kong-admin/routes \
         -d name=kong-admin \
         -d "paths[]=/${KONG_ADMIN_PATH}" > /dev/null
-
-    curl -s -X POST -H "Content-Type: application/json" http://localhost:8001/services/kong-admin/plugins \
-        --data "{\"name\":\"key-auth\",\"config\":{\"key_names\":[\"apikey\"],\"hide_credentials\":true}}" > /dev/null
 fi
 
 if [ "$EE_LICENSE" != "placeholder" ]; then

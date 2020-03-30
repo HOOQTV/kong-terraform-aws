@@ -529,6 +529,13 @@ variable "kong_admin_username" {
   default = "admin"
 }
 
+variable "kong_admin_group" {
+  description = "Consumer Group for Kong Admin"
+  type        = string
+
+  default = "admin"
+}
+
 variable "kong_admin_key" {
   description = "Consumer apiKey for Kong Admin Endpoint"
   type        = string
@@ -540,5 +547,5 @@ variable "kong_admin_path" {
   description = "Path Kong Admin Endpoint"
   type        = string
 
-  default = "kong-admin"
+  default = "admin"
 }
