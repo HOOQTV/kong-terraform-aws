@@ -520,3 +520,25 @@ variable "db_final_snapshot_identifier" {
   type        = string
   default     = ""
 }
+
+# Kong Admin Access
+variable "kong_admin_username" {
+  description = "Consumer Username for Kong Admin Endpoint"
+  type        = string
+
+  default = "admin"
+}
+
+variable "kong_admin_key" {
+  description = "Consumer apiKey for Kong Admin Endpoint"
+  type        = string
+
+  default = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+
+variable "kong_admin_path" {
+  description = "Path Kong Admin Endpoint"
+  type        = string
+
+  default = "kong-admin"
+}
