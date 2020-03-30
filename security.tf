@@ -129,14 +129,14 @@ resource "aws_security_group_rule" "admin-ingress-external-lb" {
 
 # Internal load balancer access
 resource "aws_security_group_rule" "ssh-ingress-internal-lb" {
-  security_group_id = aws_security_group.jumpbox.id
+  security_group_id = aws_security_group.kong.id
 
   type      = "ingress"
   from_port = 22
   to_port   = 22
   protocol  = "tcp"
 
-  source_security_group_id = aws_security_group.internal-lb.id
+  source_security_group_id = aws_security_group.jumpbox.id
 }
 
 resource "aws_security_group_rule" "proxy-ingress-internal-lb" {
