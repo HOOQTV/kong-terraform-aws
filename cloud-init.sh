@@ -251,11 +251,7 @@ if [ $? != 0 ]; then
         -d name=ip-restriction \
         -d "config.whitelist=127.0.0.1" \
         -d "config.whitelist=${VPC_CIDR_BLOCK}" > /dev/null
-fi
 
-# Enable kong admin endpoint
-curl -s -I http://localhost:8000/status | grep -q "200 OK"
-if [ $? != 0 ]; then
     echo "Configuring Admin Access"
     curl -s -X POST http://localhost:8001/consumers \
         -d "username=${KONG_ADMIN_USERNAME}" > /dev/null
