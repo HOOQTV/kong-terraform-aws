@@ -97,7 +97,7 @@ resource "aws_instance" "kong-jumpbox" {
     aws_security_group.jumpbox.id,
   ]
 
-  subnet_id = data.aws_subnet_ids.public.ids[0]
+  subnet_id = sort(data.aws_subnet_ids.public.ids)[0]
 
   tags = merge(
     {
