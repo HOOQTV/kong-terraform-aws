@@ -129,7 +129,7 @@ resource "aws_security_group_rule" "admin-ingress-external-lb" {
 
 # Internal load balancer access
 resource "aws_security_group_rule" "ssh-ingress-internal-lb" {
-  security_group_id = aws_security_group.kong.id
+  security_group_id = aws_security_group.jumpbox.id
 
   type      = "ingress"
   from_port = 22
@@ -273,6 +273,34 @@ resource "aws_security_group_rule" "external-lb-egress-admin" {
   protocol  = "tcp"
 
   source_security_group_id = aws_security_group.kong.id
+}
+
+# Jumpbox
+resource "aws_security_group" "jumpbox" {
+  description = "Kong Jumpbox"
+  name        = format("%s-%s-jumpbox", var.service, var.environment)
+  vpc_id      = data.aws_vpc.vpc.id
+
+  tags = merge(
+    {
+      "Name"        = format("%s-%s-jumpbox", var.service, var.environment),
+      "Environment" = var.environment,
+      "Description" = var.description,
+      "Service"     = var.service,
+    },
+    var.tags
+  )
+}
+
+resource "aws_security_group_rule" "jumpbox-ingress-ssh" {
+  security_group_id = aws_security_group.jumpbox.id
+
+  type      = "ingress"
+  from_port = 22
+  to_port   = 22
+  protocol  = "tcp"
+
+  cidr_blocks = ["0.0.0.0/0"]
 }
 
 # Internal
