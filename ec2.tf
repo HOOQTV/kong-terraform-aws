@@ -85,3 +85,25 @@ resource "aws_autoscaling_group" "kong" {
     aws_rds_cluster.kong
   ]
 }
+
+resource "aws_instance" "kong-jumpbox" {
+  ami                         = var.ec2_ami[data.aws_region.current.name]
+  instance_type               = var.ec2_instance_type
+  key_name                    = var.ec2_key_name
+  associate_public_ip_address = true
+
+  security_groups = [
+    data.aws_security_group.default.id,
+    aws_security_group.jumpbox.id,
+  ]
+
+  tags = merge(
+    {
+      "Name"        = format("%s-%s-jumpbox", var.service, var.environment),
+      "Environment" = var.environment,
+      "Description" = var.description,
+      "Service"     = var.service,
+    },
+    var.tags
+  )
+}
