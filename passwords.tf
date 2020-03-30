@@ -17,3 +17,8 @@ resource "random_string" "session_secret" {
   length  = 32
   special = false
 }
+
+resource "random_string" "kong_admin_key" {
+  length  = 32
+  special = false
+}

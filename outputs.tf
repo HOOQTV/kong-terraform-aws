@@ -30,3 +30,9 @@ output "lb_endpoint_internal" {
   value       = coalesce(aws_lb.internal.*.dns_name)
   description = "The internal load balancer endpoint"
 }
+
+output "kong_admin_key" {
+  sensitive   = true
+  value       = random_string.kong_admin_key.result
+  description = "The API Key for Kong Admin access"
+}
