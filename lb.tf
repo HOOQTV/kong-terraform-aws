@@ -50,20 +50,6 @@ resource "aws_lb" "external" {
   )
 }
 
-resource "aws_lb_listener" "external-http" {
-  count = var.enable_external_lb ? 1 : 0
-
-  load_balancer_arn = aws_lb.external[0].arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    target_group_arn = aws_lb_target_group.external[0].arn
-    type             = "forward"
-  }
-}
-
-
 resource "aws_lb_listener" "external-https" {
   count = var.enable_external_lb ? 1 : 0
 
