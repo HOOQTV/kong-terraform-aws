@@ -262,7 +262,7 @@ if [ $? != 0 ]; then
     curl -s -X POST -H "Content-Type: application/json" http://localhost:8001/services \
         --data "{\"name\": \"kong-admin\",\"host\": \"localhost\",\"port\": 8001,\"path\": \"/\"}" > /dev/null
 
-    curl -s -X POST -H "Content-Type: application/json" http://localhost:8001/services/kong-admin/routes \
+    curl -s -X POST http://localhost:8001/services/kong-admin/routes \
         -d name=kong-admin \
         -d "paths[]=/${KONG_ADMIN_PATH}" > /dev/null
 
