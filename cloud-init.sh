@@ -253,6 +253,27 @@ if [ $? != 0 ]; then
         -d "config.whitelist=${VPC_CIDR_BLOCK}" > /dev/null
 fi
 
+# Enable kong admin endpoint
+curl -s -I http://localhost:8000/status | grep -q "200 OK"
+if [ $? != 0 ]; then
+    echo "Configuring Admin Access"
+    curl -s -X POST http://localhost:8001/consumers \
+        -d "username=${KONG_ADMIN_USERNAME}" > /dev/null
+
+    curl -s -X POST "http://localhost:8001/consumers/${KONG_ADMIN_USERNAME}/key-auth" \
+        -d "key=${KONG_ADMIN_KEY}" > /dev/null
+
+    curl -s -X POST -H "Content-Type: application/json" http://localhost:8001/services \
+        --data "{\"name\": \"kong-admin\",\"host\": \"localhost\",\"port\": 8001,\"path\": \"/\"}" > /dev/null
+
+    curl -s -X POST -H "Content-Type: application/json" http://localhost:8001/services/kong-admin/routes \
+        -d name=kong-admin \
+        -d "paths[]=/${KONG_ADMIN_PATH}" > /dev/null
+
+    curl -s -X POST -H "Content-Type: application/json" http://localhost:8001/services/kong-admin/plugins \
+        --data "{\"name\":\"key-auth\",\"config\":{\"key_names\":[\"apikey\"],\"hide_credentials\":true}}" > /dev/null
+fi
+
 if [ "$EE_LICENSE" != "placeholder" ]; then
     echo "Configuring enterprise edition settings"
     
