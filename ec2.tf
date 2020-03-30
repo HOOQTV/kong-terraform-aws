@@ -92,10 +92,12 @@ resource "aws_instance" "kong-jumpbox" {
   key_name                    = var.ec2_key_name
   associate_public_ip_address = true
 
-  security_groups = [
+  vpc_security_group_ids = [
     data.aws_security_group.default.id,
     aws_security_group.jumpbox.id,
   ]
+
+  subnet_id = data.aws_subnet_ids.public.ids[0]
 
   tags = merge(
     {
