@@ -6,7 +6,7 @@ resource "aws_launch_configuration" "kong" {
   key_name             = var.ec2_key_name
 
   security_groups = [
-    data.aws_security_group.default.id,
+    # data.aws_security_group.default.id,
     aws_security_group.kong.id,
   ]
 
@@ -93,7 +93,7 @@ resource "aws_instance" "kong-jumpbox" {
   associate_public_ip_address = true
 
   vpc_security_group_ids = [
-    data.aws_security_group.default.id,
+    # data.aws_security_group.default.id,
     aws_security_group.jumpbox.id,
   ]
 
