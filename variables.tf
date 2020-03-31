@@ -1,6 +1,11 @@
 # Network settings
-variable "vpc" {
-  description = "VPC Name for the AWS account and region specified"
+# variable "vpc" {
+#   description = "VPC Name for the AWS account and region specified"
+#   type        = string
+# }
+
+variable "vpc_id" {
+  description = "VPC Id for the AWS account and region specified"
   type        = string
 }
 

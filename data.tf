@@ -2,9 +2,10 @@
 data "aws_vpc" "vpc" {
   state = "available"
 
-  tags = {
-    "Name" = var.vpc
-  }
+  id = var.vpc_id
+  # tags = {
+  #   "Name" = var.vpc
+  # }
 }
 
 data "aws_region" "current" {}
