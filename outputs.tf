@@ -36,3 +36,8 @@ output "kong_admin_key" {
   value       = random_string.kong_admin_key.result
   description = "The API Key for Kong Admin access"
 }
+
+output "kong_jumpbox_public_ip" {
+  value       = aws_instance.kong-jumpbox.public_ip
+  description = "Kong Jumpbox public IP"
+}
