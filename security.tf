@@ -224,6 +224,17 @@ resource "aws_security_group_rule" "kong-egress-https" {
   cidr_blocks = ["0.0.0.0/0"]
 }
 
+resource "aws_security_group_rule" "kong-egress-db" {
+  security_group_id = aws_security_group.kong.id
+
+  type      = "egress"
+  from_port = 5432
+  to_port   = 5432
+  protocol  = "tcp"
+
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
 # Load balancers
 # External
 resource "aws_security_group" "external-lb" {
@@ -426,18 +437,6 @@ resource "aws_security_group_rule" "internal-lb-egress-admin" {
 
   source_security_group_id = aws_security_group.kong.id
 }
-
-resource "aws_security_group_rule" "internal-lb-egress-db" {
-  security_group_id = aws_security_group.internal-lb.id
-
-  type      = "egress"
-  from_port = 5432
-  to_port   = 5432
-  protocol  = "tcp"
-
-  cidr_blocks = ["0.0.0.0/0"]
-}
-
 
 resource "aws_security_group_rule" "internal-lb-egress-manager" {
   count = var.enable_ee ? 1 : 0
