@@ -303,6 +303,17 @@ resource "aws_security_group_rule" "jumpbox-ingress-ssh" {
   cidr_blocks = ["0.0.0.0/0"]
 }
 
+resource "aws_security_group_rule" "jumpbox-egress" {
+  security_group_id = aws_security_group.kong.id
+
+  type      = "egress"
+  from_port = 0
+  to_port   = 0
+  protocol  = "-1"
+
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
 # Internal
 resource "aws_security_group" "internal-lb" {
   description = "Kong Internal Load Balancer"
@@ -415,6 +426,18 @@ resource "aws_security_group_rule" "internal-lb-egress-admin" {
 
   source_security_group_id = aws_security_group.kong.id
 }
+
+resource "aws_security_group_rule" "internal-lb-egress-db" {
+  security_group_id = aws_security_group.internal-lb.id
+
+  type      = "egress"
+  from_port = 5432
+  to_port   = 5432
+  protocol  = "tcp"
+
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
 
 resource "aws_security_group_rule" "internal-lb-egress-manager" {
   count = var.enable_ee ? 1 : 0
