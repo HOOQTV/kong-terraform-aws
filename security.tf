@@ -304,7 +304,7 @@ resource "aws_security_group_rule" "jumpbox-ingress-ssh" {
 }
 
 resource "aws_security_group_rule" "jumpbox-egress" {
-  security_group_id = aws_security_group.kong.id
+  security_group_id = aws_security_group.jumpbox.id
 
   type      = "egress"
   from_port = 0
